@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@import "ag-grid-community/styles/ag-grid.css";
+
+:root {
+  --background: #f9f5f5;
+  --foreground: #171717;
+}
+
+
+
+
+
+.ag-cell{ 
+  background: #e6e4e4;
+  border-radius: 14px;
+  border: 2px solid #ffffff !important;
+}
+
+
+
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* 그리드 해더 */
+.custom-all-headers {
+                    background-color: #ffffff;
+                    font-weight: bold;
+                    border-radius: 10px;
+                    text-align: center;
+                }
+                
+.ag-header{
+  border-radius: 10px;
+  border: #0a0a0a;
+  border-top: 1px solid #e6e4e4;
+  border-left: 1px solid #e6e4e4;
+  border-right: 1px solid #e6e4e4;
+  border-bottom: 1px solid #e6e4e4;
+}         
+
+
+.ag-row {
+         border: 0;
+         border-bottom: 10px solid #ffffff; 
+}
+
+.ag-cell {
+                    display: flex;
+                    align-items: center; /* 수직 중앙 정렬 */
+                    justify-content: center; /* 수평 중앙 정렬 */
+                   padding: 1px;
+                }
+
+.ag-root-wrapper.ag-layout-normal {
+    height: 100%;
+    border:0;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+}
+
