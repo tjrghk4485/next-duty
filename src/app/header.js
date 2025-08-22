@@ -27,6 +27,7 @@ export default function Header() {
           {[
             { title: "홈", route: "/" },
             { title: "게시판", route: "/post" },
+            { title: "사용자정보", route: "/status" },
             { title: "스케줄표", route: "/schedule" },
           ].map(({ route, title }) => (
             <li className="mt-3 md:mt-0 md:ml-6" key={title}>
