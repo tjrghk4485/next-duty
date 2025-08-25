@@ -1,81 +1,74 @@
 "use client";
 
-import { useState, useEffect, useMemo} from "react";
+import { useState, useEffect, useMemo, useRef} from "react";
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
 import { AgGridReact } from 'ag-grid-react'; // AG Grid 컴포넌트 임포트
-const mockPosts = Array.from({ length: 100 }, (_, i) => ({
-  id: i + 1,
-  title: `댓글내용 ${i + 1}`,
-  author: `작성자 ${Math.floor(i / 10) + 1}`,
-}));
+import axios from "../lib/axios";
 
 export default function Home() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const router = useRouter();
-  const postsPerPage = 10; // 한 페이지에 보여줄 게시글 수
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
-  const [currentPosts, setCurrentPosts] = useState([]); // 현재 페이지의 게시글 목록
-  const [totalPosts, setTotalPosts] = useState(0); // 총 게시글 수
   const searchParams = useSearchParams();
-  const searchQuery = searchParams.get('query');
+  const [rowData, setRowData] = useState([]); // useState로 수정 
+  const gridApi = useRef(null);
+  const columnApi = useRef(null);
+  const keyMap = {
+        "삭제": "delete",
+        "상태": "status",
+        "사용자": "parent_id",
+        "간호사번호": "nurse_id",
+        "이름": "nurse_nm",
+        "리더여부": "part_leader_yn",
+        "근무시작일": "start_date",
+        "선호근무": "keep_type",
+        "사용여부": "use_yn",
+      };
+  const columns = [
+        { headerName: "삭제", width:50, field: "delete",editable: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "상태", width:80, field: "status", editable: false, hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "사용자", width:80, field: "parent_id", editable: true , hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "간호사번호", width:80, field: "nurse_id", editable: true , hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "이름", width:80, field: "nurse_nm", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "근무시작일", width:80, field: "start_date", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "리더여부", width:80, field: "part_leader_yn", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "선호근무", width:80, field: "keep_type",  editable: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header",
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+              values: ['D', 'E', 'N','X'],
+            }},
+        { headerName: "사용여부", width:80, field: "use_yn", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"}
+    ];
   ModuleRegistry.registerModules([AllCommunityModule]);
   // 컴포넌트가 마운트되거나 currentPage가 변경될 때마다 실행
   useEffect(() => {
-    // 실제 API 호출 로직 (가상)
-    // const fetchPosts = async () => {
-    //   const response = await fetch(`/api/posts?page=${currentPage}&limit=${postsPerPage}`);
-    //   const data = await response.json();
-    //   setCurrentPosts(data.posts);
-    //   setTotalPosts(data.total);
-    // };
-    // fetchPosts();
-
-    // mock data를 사용하여 페이지네이션 구현
-    const startIndex = (currentPage - 1) * postsPerPage;
-    const endIndex = startIndex + postsPerPage;
-    setCurrentPosts(mockPosts.slice(startIndex, endIndex));
-    setTotalPosts(mockPosts.length);
+    
+    axios.get(`${API_BASE_URL}/nurse/sel`)
+      .then(response => {
+        const modifiedData = response.data.map(item => ({
+        ...item,
+        delete: false
+      }));
+        setRowData(modifiedData);
+      })
+    .catch(error => alert('Error:', error));
+  
+   
+    setTimeout(() => {
+      gridApi.current.sizeColumnsToFit();
+    }, 100);
   }, [currentPage]);
   const onGridReady = (params) => {
-        params.api.sizeColumnsToFit();
+    gridApi.current = params.api;
+    columnApi.current = params.columnApi;
+    params.api.sizeColumnsToFit();
     };
-  // 총 페이지 수 계산
-  const totalPages = Math.ceil(totalPosts / postsPerPage);
+
   
-  // 테이블에 표시할 행(row) 데이터
-  const [rowData] = useState([
-      { make: "Ford", model: "Focus", price: 40000 },
-      { make: "Toyota", model: "Celica", price: 45000 },
-      { make: "BMW", model: "4 Series", price: 50000 },
-      { make: "BMW", model: "4 Series", price: 50000 },
-      { make: "BMW", model: "4 Series", price: 50000 },
-      { make: "BMW", model: "4 Series", price: 50000 },
-      { make: "BMW", model: "4 Series", price: 50000 },
-      { make: "BMW", model: "4 Series", price: 50000 },
-      { make: "BMW", model: "4 Series", price: 50000 },
-      { make: "BMW", model: "4 Series", price: 50000 },
-      { make: "BMW", model: "4 Series", price: 50000 },
-
-  ]);
-
-    // 각 컬럼의 속성을 정의하는 배열
-  const [columnDefs] = useState([
-    { headerName: "삭제", width:50, field: "delete",editable: true},
-      { headerName: "상태", width:80, field: "status", editable: false, hide: true},
-      { headerName: "사용자", width:80, field: "parent_id", editable: true , hide: true},
-      { headerName: "간호사번호", width:80, field: "nurse_id", editable: true , hide: true},
-      { headerName: "이름", width:80, field: "nurse_nm", editable: true },
-      { headerName: "근무시작일", width:80, field: "start_date", editable: true, headerClass: "ag-center-header"},
-      { headerName: "리더여부", width:80, field: "part_leader_yn", editable: true },
-      { headerName: "선호근무", width:80, field: "keep_type",  editable: true,
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: {
-            values: ['D', 'E', 'N','X'],
-          }},
-      { headerName: "사용여부", width:80, field: "use_yn", editable: true }
-  ]);
+ 
 
   // 컬럼의 기본 속성을 설정
   const defaultColDef = useMemo(() => {
@@ -252,7 +245,7 @@ export default function Home() {
           <div  className="  rounded-xl flex-grow flex-grow overflow-hidden  p-4">
             <AgGridReact
                     rowData={rowData}
-                    columnDefs={columnDefs}
+                    columnDefs={columns}
                     defaultColDef={defaultColDef}
                     onGridReady = {onGridReady}
                     rowHeight={50}
@@ -260,16 +253,40 @@ export default function Home() {
           </div>
           </div>
           <div className="flex flex-row w-[800px] min-h-screen space-y-4  gap-4   rounded-2xl ">
-            <div className="flex flex-col gap-2 w-[100px] min-h-screen py-8">
+            <div className="flex flex-col gap-2 w-[100px] min-h-screen py-2">
             <button className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" onClick={sendDataToServer}>
                 저장
             </button>
-            
+            <button className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" onClick={sendDataToServer}>
+                행추가
+            </button>
+            <a href={`${API_BASE_URL}/sample/nurseUpload.xlsx`} download>
+              <button  className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" >샘플  엑셀 다운로드</button>
+            </a>
+            <div className="relative inline-block ">
+      {/* 실제 파일 입력 필드 (투명하게 숨김) */}
+      <input
+        type="file"
+        accept=".xlsx, .xls"
+        onChange={handleFileUpload}
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        style={{ zIndex: 1 }} // 버튼 위에 위치하도록 z-index 설정
+      />
+      {/* 사용자가 보게 될 버튼 */}
+      <button
+        className="
+          w-[80px] h-[50px]
+          bg-sky-700 text-white rounded-2xl
+          border border-cyan-800 shadow-md hover:bg-sky-900
+          "
+        onClick={(e) => e.preventDefault()} // 폼 제출 방지
+      >
+        엑셀업로드
+      </button>
+    </div>
             </div>
           </div>
         </div>
-        
-       
       </>
   );
 }

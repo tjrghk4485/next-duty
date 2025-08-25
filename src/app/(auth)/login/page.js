@@ -1,0 +1,92 @@
+"use client"
+// pages/login.js
+import { useState, useEffect, useRef } from 'react';
+import { useRouter, useSearchParams  } from 'next/navigation';
+import axios from '../../lib/axios';
+import Head from 'next/head';
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const searchParams = useSearchParams();
+  const alertShown = useRef(false); // alert가 이미 떴는지 확인하는 변수
+
+  useEffect(() => {
+    // 이미 알림이 표시되었으면 함수를 종료
+    if (alertShown.current) {
+      return;
+    }
+
+    if (searchParams.get('expired') === 'true') {
+      alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+      alertShown.current = true; // 알림이 표시되었음을 기록
+    }
+  }, [searchParams]);
+
+
+
+  const handleLogin = async (e) => {
+    e.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
+
+    try {
+      // 스프링 시큐리티 백엔드 API 주소로 로그인 요청을 보냅니다.
+      const response = await axios.post('http://localhost:8080/api/login', {
+        username,
+        password,
+      });
+
+      // 백엔드에서 받은 JWT 토큰을 localStorage에 저장합니다.
+      //localStorage.setItem('token', response.data.token);
+      
+      // 로그인 성공 후 메인 페이지로 이동
+      router.push('/post');
+    } catch (err) {
+      // 로그인 실패 시 에러 메시지 표시
+      setError('로그인 실패! 아이디와 비밀번호를 확인해주세요.');
+    }
+  };
+
+  return (
+    <>
+      <Head>
+        <title>로그인</title>
+      </Head>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <form onSubmit={handleLogin} className="p-8 bg-white rounded shadow-md w-96">
+          <h1 className="text-2xl font-bold mb-6 text-center">로그인</h1>
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          <div className="mb-4">
+            <label className="block text-gray-700">아이디</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-3 py-2 border rounded"
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700">비밀번호</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border rounded"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-[200px] bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+          >
+            로그인
+          </button>
+        </form>
+      </div>
+    </>
+  );
+}
+
+LoginPage.getLayout = function getLayout(page) {
+  return page;
+};
