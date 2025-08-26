@@ -30,23 +30,23 @@ export default function Home() {
   const columns = [
         { headerName: "삭제", width:50, field: "delete",editable: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
         { headerName: "상태", width:80, field: "status", editable: false, hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "사용자", width:80, field: "parent_id", editable: true , hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "간호사번호", width:80, field: "nurse_id", editable: true , hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "이름", width:80, field: "nurse_nm", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "근무시작일", width:80, field: "start_date", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "리더여부", width:80, field: "part_leader_yn", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "선호근무", width:80, field: "keep_type",  editable: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header",
+        { headerName: "사용자", width:80, field: "parentId", editable: true , hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "간호사번호", width:80, field: "nurseId", editable: true , hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "이름", width:80, field: "nurseNm", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "근무시작일", width:80, field: "startDate", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "리더여부", width:80, field: "partLeaderYn", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
+        { headerName: "선호근무", width:80, field: "keepType",  editable: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header",
             cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               values: ['D', 'E', 'N','X'],
             }},
-        { headerName: "사용여부", width:80, field: "use_yn", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"}
+        { headerName: "사용여부", width:80, field: "useYn", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"}
     ];
   ModuleRegistry.registerModules([AllCommunityModule]);
   // 컴포넌트가 마운트되거나 currentPage가 변경될 때마다 실행
   useEffect(() => {
     
-    axios.get(`${API_BASE_URL}/nurse/sel`)
+    axios.get(`${API_BASE_URL}/nurse/`)
       .then(response => {
         const modifiedData = response.data.map(item => ({
         ...item,
@@ -57,14 +57,14 @@ export default function Home() {
     .catch(error => alert('Error:', error));
   
    
-    setTimeout(() => {
-      gridApi.current.sizeColumnsToFit();
-    }, 100);
+    // setTimeout(() => {
+    //   gridApi.current.sizeColumnsToFit();
+    // }, 100);
   }, [currentPage]);
   const onGridReady = (params) => {
     gridApi.current = params.api;
     columnApi.current = params.columnApi;
-    params.api.sizeColumnsToFit();
+    // params.api.sizeColumnsToFit();
     };
 
   
@@ -109,9 +109,9 @@ export default function Home() {
   
     const allData = gridApi.current.getRenderedNodes().map(node => node.data);
     console.log("테이블데이터 =", allData);
-    setTimeout(() => {
-      gridApi.current.sizeColumnsToFit();
-    }, 100);
+    // setTimeout(() => {
+    //   gridApi.current.sizeColumnsToFit();
+    // }, 100);
   };
 
 
@@ -226,9 +226,9 @@ export default function Home() {
       });
     });
 
-    setTimeout(() => {
-      gridApi.current.sizeColumnsToFit();
-    }, 10);
+    // setTimeout(() => {
+    //   gridApi.current.sizeColumnsToFit();
+    // }, 10);
   };
 
   
@@ -257,7 +257,7 @@ export default function Home() {
             <button className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" onClick={sendDataToServer}>
                 저장
             </button>
-            <button className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" onClick={sendDataToServer}>
+            <button className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" onClick={addRow}>
                 행추가
             </button>
             <a href={`${API_BASE_URL}/sample/nurseUpload.xlsx`} download>
