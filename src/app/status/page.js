@@ -1,12 +1,16 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef} from "react";
+import { useState, useEffect, useMemo, useRef, useCallback} from "react";
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
 import { AgGridReact } from 'ag-grid-react'; // AG Grid 컴포넌트 임포트
 import axios from "../lib/axios";
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+
+
 
 export default function Home() {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -28,21 +32,27 @@ export default function Home() {
         "사용여부": "use_yn",
       };
   const columns = [
-        { headerName: "삭제", width:50, field: "delete",editable: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "상태", width:80, field: "status", editable: false, hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "사용자", width:80, field: "parentId", editable: true , hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "간호사번호", width:80, field: "nurseId", editable: true , hide: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "이름", width:80, field: "nurseNm", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "근무시작일", width:80, field: "startDate", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "리더여부", width:80, field: "partLeaderYn", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"},
-        { headerName: "선호근무", width:80, field: "keepType",  editable: true, cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header",
+        { headerName: "삭제", width:50, field: "delete",editable: true, headerClass: "ag-center-header"},
+        { headerName: "상태", width:80, field: "status", editable: false, hide: true, headerClass: "ag-center-header"},
+        { headerName: "사용자", width:80, field: "parentId", editable: true , hide: true, headerClass: "ag-center-header"},
+        { headerName: "간호사번호", width:80, field: "nurseId", editable: true , hide: true, headerClass: "ag-center-header"},
+        { headerName: "이름", width:80, field: "nurseNm", editable: true , headerClass: "ag-center-header"},
+        { headerName: "근무시작일", width:80, field: "startDate", editable: true , headerClass: "ag-center-header"},
+        { headerName: "리더여부", width:80, field: "partLeaderYn", editable: true ,headerClass: "ag-center-header"},
+        { headerName: "선호근무", width:80, field: "keepType",  editable: true, headerClass: "ag-center-header",
             cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               values: ['D', 'E', 'N','X'],
             }},
-        { headerName: "사용여부", width:80, field: "useYn", editable: true , cellStyle: { borderRight: "1px solid #ccc"},headerClass: "ag-center-header"}
+        { headerName: "사용여부", width:80, field: "useYn", editable: true ,headerClass: "ag-center-header"}
     ];
   ModuleRegistry.registerModules([AllCommunityModule]);
+
+  const onGridReady = (params) => {
+    gridApi.current = params.api;
+    columnApi.current = params.columnApi;
+    params.api.sizeColumnsToFit();
+    };
   // 컴포넌트가 마운트되거나 currentPage가 변경될 때마다 실행
   useEffect(() => {
     
@@ -61,11 +71,14 @@ export default function Home() {
     //   gridApi.current.sizeColumnsToFit();
     // }, 100);
   }, [currentPage]);
-  const onGridReady = (params) => {
-    gridApi.current = params.api;
-    columnApi.current = params.columnApi;
-    // params.api.sizeColumnsToFit();
-    };
+
+  useEffect(() => {
+    if(gridApi.current != null){
+      gridApi.current.sizeColumnsToFit();
+    }
+  }, [rowData])
+
+  
 
   
  
@@ -73,9 +86,9 @@ export default function Home() {
   // 컬럼의 기본 속성을 설정
   const defaultColDef = useMemo(() => {
       return {
-          sortable: true, // 정렬 기능 활성화
+          sortable: false, // 정렬 기능 활성화
           filter: false,   // 필터 기능 활성화
-          resizable: true, // 컬럼 크기 조절 기능 활성화
+          resizable: false, // 컬럼 크기 조절 기능 활성화
           
       };
   }, []);
@@ -205,6 +218,9 @@ export default function Home() {
   };
 
     //=======================그리드이벤트================================//
+
+  
+
   const onCellValueChanged = (event) => {
     const { oldValue, newValue, data, colDef, rowIndex } = event;
     console.log(`컬럼: ${colDef.field}, 변경 전 값: ${oldValue}, 변경 후 값: ${newValue}, data.id: ${data.delete}`);
@@ -242,8 +258,10 @@ export default function Home() {
         <div className="flex flex-row items-center justify-center space-y-4  m-4 px-16  rounded-2xl">
           <div className="flex flex-row w-[800px] min-h-screen space-y-4   gap-4   rounded-2xl ">
         
-          <div  className="  rounded-xl flex-grow flex-grow overflow-hidden  p-4">
+          <div  className="rounded-xl flex-grow flex-grow overflow-hidden  p-4">
             <AgGridReact
+                    className="ag-theme-alpine"
+                     theme="legacy" 
                     rowData={rowData}
                     columnDefs={columns}
                     defaultColDef={defaultColDef}

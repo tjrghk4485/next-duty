@@ -39,22 +39,21 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* 그리드 해더 */
-.custom-all-headers {
-                    background-color: #ffffff;
-                    font-weight: bold;
-                    border-radius: 10px;
-                    text-align: center;
-                }
+
                 
 .ag-header{
+  display: flex;
+                    align-items: center; /* 수직 중앙 정렬 */
+                    justify-content: center; /* 수평 중앙 정렬 */
   border-radius: 10px;
   border: #0a0a0a;
   border-top: 1px solid #e6e4e4;
   border-left: 1px solid #e6e4e4;
   border-right: 1px solid #e6e4e4;
   border-bottom: 1px solid #e6e4e4;
-}         
+}     
+
+
 
 
 .ag-row {
@@ -75,4 +74,10 @@ body {
     border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
 }
-
+/* 헤더 중앙정렬 */
+.ag-header-cell-label{
+  display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  
+}
