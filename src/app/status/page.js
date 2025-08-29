@@ -7,6 +7,7 @@ import Link from "next/link";
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
 import { AgGridReact } from 'ag-grid-react'; // AG Grid 컴포넌트 임포트
 import axios from "../lib/axios";
+import * as XLSX from 'xlsx'; 
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 
@@ -20,23 +21,24 @@ export default function Home() {
   const [rowData, setRowData] = useState([]); // useState로 수정 
   const gridApi = useRef(null);
   const columnApi = useRef(null);
+  const [excelData, setExcelData] = useState([]);
   const keyMap = {
         "삭제": "delete",
         "상태": "status",
-        "사용자": "parent_id",
-        "간호사번호": "nurse_id",
-        "이름": "nurse_nm",
-        "리더여부": "part_leader_yn",
-        "근무시작일": "start_date",
-        "선호근무": "keep_type",
-        "사용여부": "use_yn",
+        "사용자": "parentId",
+        "간호사번호": "nurseId",
+        "이름": "nurseNm",
+        "리더여부": "partLeaderYn",
+        "근무시작일": "startDate",
+        "선호근무": "keepType",
+        "사용여부": "useYn",
       };
   const columns = [
         { headerName: "삭제", width:50, field: "delete",editable: true, headerClass: "ag-center-header"},
         { headerName: "상태", width:80, field: "status", editable: false, hide: true, headerClass: "ag-center-header"},
         { headerName: "사용자", width:80, field: "parentId", editable: true , hide: true, headerClass: "ag-center-header"},
-        { headerName: "간호사번호", width:80, field: "nurseId", editable: true , hide: true, headerClass: "ag-center-header"},
         { headerName: "이름", width:80, field: "nurseNm", editable: true , headerClass: "ag-center-header"},
+        { headerName: "간호사번호", width:80, field: "nurseId", editable: true , hide: true, headerClass: "ag-center-header"},
         { headerName: "근무시작일", width:80, field: "startDate", editable: true , headerClass: "ag-center-header"},
         { headerName: "리더여부", width:80, field: "partLeaderYn", editable: true ,headerClass: "ag-center-header"},
         { headerName: "선호근무", width:80, field: "keepType",  editable: true, headerClass: "ag-center-header",
@@ -56,7 +58,7 @@ export default function Home() {
   // 컴포넌트가 마운트되거나 currentPage가 변경될 때마다 실행
   useEffect(() => {
     
-    axios.get(`${API_BASE_URL}/nurse/`)
+    axios.get(`${API_BASE_URL}/nurse`)
       .then(response => {
         const modifiedData = response.data.map(item => ({
         ...item,
@@ -97,20 +99,16 @@ export default function Home() {
       getRowData();
       const newItem = {   delete: false,
                           status: 'I',
-                          parent_id: localStorage.getItem('userId'),
-                          keep_type: 'X',
-                          part_leader_yn: false,
-                          use_yn: true 
+                          parentId: localStorage.getItem('userId'),
+                          keepType: 'X',
+                          partLeaderYn: false,
+                          useYn: true 
                       };
       setRowData([...rowData, newItem]);
   };
 
   const selectRow = () => {
-    axios.get(`${API_BASE_URL}/nurse/sel`,{
-      params: {
-        parent_id: localStorage.getItem('userId')
-      }
-      })
+    axios.get(`${API_BASE_URL}/nurse`)
       .then(response => {
         const modifiedData = response.data.map(item => ({
         ...item,
@@ -119,12 +117,6 @@ export default function Home() {
         setRowData(modifiedData);
       })
     .catch(error => alert('Error:', error));
-  
-    const allData = gridApi.current.getRenderedNodes().map(node => node.data);
-    console.log("테이블데이터 =", allData);
-    // setTimeout(() => {
-    //   gridApi.current.sizeColumnsToFit();
-    // }, 100);
   };
 
 
@@ -150,12 +142,11 @@ export default function Home() {
         const allData = [];
         gridApi.current.forEachNode((node) => {
             if (node.data.status){
-                if (!node.data.start_date && !node.data.nurse_nm) {
+                if (!node.data.startDate && !node.data.nurseNm) {
                     alert((parseInt(node.id)  + 1) + "번째 줄에 빈칸이 존재합니다.");
                     nullChk = 1;
                     return;
                 }
-                node.data.parent_id = localStorage.getItem('userId'),
                 allData.push(node.data); // 각 행의 데이터를 배열에 추가
             }
             
@@ -163,7 +154,7 @@ export default function Home() {
         if (nullChk == 1) return;
         console.log("전체 데이터:", allData);
         try {
-            const response = await axios.post(`${API_BASE_URL}/nurse/mod`, allData);
+            const response = await axios.post(`${API_BASE_URL}/nurse`, allData);
             console.log('서버 응답:', response.data.output_msg);
             alert('서버 응답:' + response.data.output_msg);
             selectRow();   
@@ -228,7 +219,7 @@ export default function Home() {
     // 전체 rowData를 한 번에 갱신 (기존 rowData와 변경된 값만 반영)
     setRowData((prevRowData) => {
       return prevRowData.map((row,index) => {
-        if (rowIndex === index && row.nurse_id === data.nurse_id) {
+        if (rowIndex === index && row.nurseId === data.nurseId) {
           // delete 선택 시 상태 변경
           if (colDef.field === "delete"&& data.status !== 'I') {
               return { ...row, "delete": newValue, "status": newValue ? "D" : "U"};
@@ -267,6 +258,8 @@ export default function Home() {
                     defaultColDef={defaultColDef}
                     onGridReady = {onGridReady}
                     rowHeight={50}
+                    suppressRowHoverHighlight = {true} 
+                    onCellValueChanged = {onCellValueChanged}
                 />
           </div>
           </div>

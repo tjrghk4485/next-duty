@@ -6,18 +6,23 @@
   --foreground: #171717;
 }
 
-
-
-
-
 .ag-cell{ 
   background: #e6e4e4;
   border-radius: 14px;
   border: 2px solid #ffffff !important;
+  display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  padding: 1px;
 }
 
+.ag-cell:focus{
+  border: 2px solid #0e0d0d !important;
+} 
 
-
+.ag-cell:hover {
+            transform: translateY(-2px);
+        }
 
 @theme inline {
   --color-background: var(--background);
@@ -39,12 +44,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
-                
 .ag-header{
+  font-weight: bold;
   display: flex;
-                    align-items: center; /* 수직 중앙 정렬 */
-                    justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 수평 중앙 정렬 */
   border-radius: 10px;
   border: #0a0a0a;
   border-top: 1px solid #e6e4e4;
@@ -54,19 +58,10 @@ body {
 }     
 
 
-
-
 .ag-row {
-         border: 0;
-         border-bottom: 10px solid #ffffff; 
+  border: 0;
+  border-bottom: 10px solid #ffffff; 
 }
-
-.ag-cell {
-                    display: flex;
-                    align-items: center; /* 수직 중앙 정렬 */
-                    justify-content: center; /* 수평 중앙 정렬 */
-                   padding: 1px;
-                }
 
 .ag-root-wrapper.ag-layout-normal {
     height: 100%;
@@ -74,6 +69,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
 }
+
 /* 헤더 중앙정렬 */
 .ag-header-cell-label{
   display: flex;

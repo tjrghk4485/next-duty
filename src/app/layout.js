@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body>
         {!isLoginPage && <Header />}
         <div className="font-sans flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 ">
-          <main className="w-[1745px] min-h-screen rounded-2xl">
+          <main className="w-[2200px] min-h-screen rounded-2xl">
             {children}
           </main>
         </div>
