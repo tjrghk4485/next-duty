@@ -257,6 +257,7 @@ export default function Home() {
                     columnDefs={columns}
                     defaultColDef={defaultColDef}
                     onGridReady = {onGridReady}
+                    domLayout="autoHeight"
                     rowHeight={50}
                     suppressRowHoverHighlight = {true} 
                     onCellValueChanged = {onCellValueChanged}

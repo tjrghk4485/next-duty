@@ -70,10 +70,59 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
 }
 
+
+.d-header {
+  background: rgb(91, 177, 73) !important;
+  text-align: center;
+  font-weight: bold;
+}
+
+.e-header {
+  background: rgb(132, 161, 204) !important;
+  text-align: center;
+  font-weight: bold;
+}
+
+.n-header {
+  background: rgba(233, 127, 215, 1) !important;
+  text-align: center;
+  font-weight: bold;
+}
+
+.o-header {
+  background: rgb(138, 136, 134) !important;
+  text-align: center;
+  font-weight: bold;
+}
+
+
+
+.weekend-header {
+  color: red !important;
+  text-align: center;
+  font-weight: bold;
+}
+
 /* 헤더 중앙정렬 */
 .ag-header-cell-label{
   display: flex;
   align-items: center; /* 수직 중앙 정렬 */
   justify-content: center; /* 수평 중앙 정렬 */
   
+}
+
+.ag-root-wrapper{
+  border-radius: 14px;
+  border: #0a0a0a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+}
+
+
+/* style.css 파일에 추가 */
+.day-cell {
+  background-color: #f0f4c3; /* 연한 노란색 */
+}
+
+.ag-theme-alpine .night-cell {
+  background-color: #c5cae9; /* 연한 파란색 */
 }
