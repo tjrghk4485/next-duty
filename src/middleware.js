@@ -13,12 +13,12 @@ export function middleware(request) {
 
 
   // 쿠키가 없고 보호된 경로에 접근하려는 경우 로그인 페이지로 리디렉션
-  if (!hasCookie && isProtectedPath && pathname !== '/login') {
+  if (!hasCookie && isProtectedPath && pathname !== '/login' && pathname !== '/register') {
     return NextResponse.redirect(new URL('/login?expired=true', request.nextUrl.origin));
   }
   
   // 로그인 상태인데 로그인 페이지에 접근하려는 경우 메인으로 리디렉션
-  if (hasCookie && pathname === '/login') {
+  if (hasCookie && pathname === '/login' && pathname !== '/register') {
       console.log('hasCookie:' + hasCookie);
       return NextResponse.redirect(new URL('/', request.nextUrl.origin));
   }

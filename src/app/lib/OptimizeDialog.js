@@ -12,8 +12,7 @@ export default function OptimizeDialog({ open, onClose, yyyymm, sel1, sel2 }) {
       // 여기에 실제 API 호출
       const res = await axios.post(`${API_BASE_URL}/schedule/auto`, 
         { option: option,
-          parent_id: localStorage.getItem('userId'),
-          work_date: yyyymm 
+          workDate: yyyymm 
         });
       alert('최적화 완료! 결과: ' + res.data.message);
       console.log("option" + option);
@@ -36,7 +35,7 @@ export default function OptimizeDialog({ open, onClose, yyyymm, sel1, sel2 }) {
   return (
     <div style={overlayStyle}>
       <div style={modalStyle}>
-        <h3>파트당 근무자 수 를 입력하세요.</h3>
+        <h2 className='font-bold text-lg'>파트당 근무자 수 를 입력하세요.</h2>
         <input
         type="number"
         value={option}
@@ -49,9 +48,13 @@ export default function OptimizeDialog({ open, onClose, yyyymm, sel1, sel2 }) {
             <p>처리 중입니다...</p>
           </div>
         ) : (
-          <div>
-            <button onClick={handleRun}>실행</button>
-            <button onClick={onClose} style={{ marginLeft: '0.5rem' }}>닫기</button>
+          <div className='flex gap-1'>
+            <button className="w-[60px] h-[30px]
+          bg-sky-700 text-white rounded-2xl
+          border border-cyan-800 shadow-md hover:bg-sky-900" onClick={handleRun}>실행</button>
+            <button className="w-[60px] h-[30px]
+          bg-sky-700 text-white rounded-2xl
+          border border-cyan-800 shadow-md hover:bg-sky-900" onClick={onClose} >닫기</button>
           </div>
         )}
       </div>
@@ -71,5 +74,5 @@ const modalStyle = {
   background: 'white',
   padding: '2rem',
   borderRadius: '10px',
-  minWidth: '300px',
+  minWidth: '400px',
 };

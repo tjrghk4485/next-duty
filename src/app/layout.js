@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
 
   // 로그인 페이지인지 확인
-  const isLoginPage = pathname === '/login';
+  const isLoginPage = pathname === '/login' || pathname === '/register';
 
   return (
     <html lang="ko">

@@ -2,9 +2,11 @@
 // pages/login.js
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams  } from 'next/navigation';
+import Image from 'next/image';
 import axios from '../../lib/axios';
 import Head from 'next/head';
-
+import Link from "next/link";
+import domainIcon from '../../../assets/domain.svg'
 export default function LoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState('');
@@ -32,7 +34,7 @@ export default function LoginPage() {
 
     try {
       // 스프링 시큐리티 백엔드 API 주소로 로그인 요청을 보냅니다.
-      const response = await axios.post('http://localhost:8080/api/login', {
+      const response = await axios.post('http://localhost:8080/auth/login', {
         username,
         password,
       });
@@ -41,7 +43,7 @@ export default function LoginPage() {
       //localStorage.setItem('token', response.data.token);
       
       // 로그인 성공 후 메인 페이지로 이동
-      router.push('/post');
+      router.push('/status');
     } catch (err) {
       // 로그인 실패 시 에러 메시지 표시
       setError('로그인 실패! 아이디와 비밀번호를 확인해주세요.');
@@ -53,8 +55,9 @@ export default function LoginPage() {
       <Head>
         <title>로그인</title>
       </Head>
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <form onSubmit={handleLogin} className="p-8 bg-white rounded shadow-md w-96">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <Image src={domainIcon} alt="도메인 이미지" width={300} height={200} />;
+        <form onSubmit={handleLogin} className="flex flex-col items-center justify-center p-8 bg-white rounded shadow-md w-96">
           <h1 className="text-2xl font-bold mb-6 text-center">로그인</h1>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           <div className="mb-4">
@@ -81,6 +84,9 @@ export default function LoginPage() {
           >
             로그인
           </button>
+          <Link href="/register" className="block text-black">
+            회원가입
+          </Link>        
         </form>
       </div>
     </>

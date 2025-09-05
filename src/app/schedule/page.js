@@ -24,8 +24,11 @@ export default function Home() {
   // 테이블에 표시할 행(row) 데이터
   const [rowData, setRowData] = useState([]);
   const [columnDefs, setColumnDefs] = useState([
-    { headerName: "name", field: "name" ,width:80,editable: false},
-    { headerName: "nurseId", field: "nurseId" ,width:90,hide: true}
+    { headerName: "name", field: "name" ,width:80,editable: false, cellStyle: (params) => {
+          if (params.data.part_leader_yn) {
+            return { background: 'rgba(238, 255, 88, 1)'}}}},
+    { headerName: "nurseId", field: "nurseId" ,width:90,hide: true},
+    { headerName: "part_leader_yn", field: "part_leader_yn" ,width:90,hide: true}
   ]);
 
   const [sideColumnDefs, setSideColumnDefs] = useState([
@@ -183,12 +186,24 @@ export default function Home() {
 
 
   const backMonth = () => {
-    setMonth(month - 1);
+    if(month - 1 == 0){
+      setYear(year - 1);
+      setMonth(12);
+    } else {
+      setMonth(month - 1);
+    }
+      
+    
     
   };
 
   const addMonth = () =>{
-    setMonth(month + 1);
+    if(month + 1 == 13){
+      setYear(year + 1);
+      setMonth(1);
+    } else {
+      setMonth(month + 1);
+    }
   }
 
   // 컬럼의 기본 속성을 설정
@@ -226,6 +241,9 @@ export default function Home() {
       newApis[index] = params.api;
       return newApis;
     });
+    selectRow();
+    sideSelectRow();
+    
   };
 
   useEffect(() => {
@@ -237,6 +255,7 @@ export default function Home() {
       //  gridApis[3].sizeColumnsToFit();
       // }
       
+
       selectUnderGrid();
       selectRightGrid();
   }, [gridApis, rowData]);
@@ -280,14 +299,14 @@ export default function Home() {
 
     try {
       const response =  await axios.post(`${API_BASE_URL}/schedule/delete`, {
-      workDate: yyyymm
+        workDate: yyyymm
       });
       console.log('서버 응답:', response.data.output_msg);
       alert('서버 응답:' + response.data.output_msg);
-      if(response.data.output_msg == '저장되었습니다'){
-        selectRow();
-        sideSelectRow();
-    }
+      
+      selectRow();
+      sideSelectRow();
+    
     } catch (error) {
       console.error('서버에 데이터 전송 중 오류:', error);
       alert('서버 에러응답:' + response.data.output_msg);
@@ -300,44 +319,46 @@ export default function Home() {
     if (gridApis[1]) {
         // const selectedData =gridApis[1].getSelectedRows();  // 선택된 데이터 가져오기
         // console.log("selectedData =", selectedData);
-        const allData = [];
-       gridApis[1].forEachNode((node) => {
-            allData.push(node.data); // 각 행의 데이터를 배열에 추가
-        });
+      const allData = [];
+      gridApis[1].forEachNode((node) => {
+        allData.push(node.data); // 각 행의 데이터를 배열에 추가
+      });
         
-        console.log("전체 데이터:", allData);
+    console.log("전체 데이터:", allData);
 
-        const formattedData = allData.flatMap(item => {
-          const  parentId = item.parent_id; //  parentId를  workDate로 사용
-          const  nurseId = item.nurse_id; // name을  nurseId로 사용
-          const newYyyymm = `${yyyymm.substring(0, 4)}-${yyyymm.substring(4, 6)}`;
+    const formattedData = allData.flatMap(item => {
+    const  parentId = item.parent_id; //  parentId를  workDate로 사용
+    const  nurseId = item.nurse_id; // name을  nurseId로 사용
+    const newYyyymm = `${yyyymm.substring(0, 4)}-${yyyymm.substring(4, 6)}`;
 
-          return Object.keys(item)
-            .filter(key => !isNaN(key)) // 숫자 키(1~31)만 필터링
-            .map(key => ({
-               workDate: yyyymm,
-               parentId: parentId,
-               nurseId: nurseId,
-               workType: item[key], // 해당 날짜의  workType
-               workDay: parseInt(key, 10), // 1~31을  workDay로 사용
-               fullWorkDate: newYyyymm+'-'+ String(parseInt(key, 10)).padStart(2, '0')
-            }));
-        });
+      return Object.keys(item)
+        .filter(key => !isNaN(key)) // 숫자 키(1~31)만 필터링
+        .map(key => ({
+            workDate: yyyymm,
+            parentId: parentId,
+            nurseId: nurseId,
+            workType: item[key], // 해당 날짜의  workType
+            workDay: parseInt(key, 10), // 1~31을  workDay로 사용
+            fullWorkDate: newYyyymm+'-'+ String(parseInt(key, 10)).padStart(2, '0')
+        }));
+      });
 
-        console.log("수정 후 전체 데이터:",formattedData);
+      console.log("수정 후 전체 데이터:",formattedData);
 
-        try {
-            const response = await axios.post(`${API_BASE_URL}/schedule`, formattedData);
-            console.log('서버 응답:', response.data.output_msg);
-            alert('서버 응답:' + response.data.output_msg);
-            selectRow();
-            //sideSelectRow();
-        } catch (error) {
-            console.error('서버에 데이터 전송 중 오류:', error);
-            alert('서버 에러응답:' + response.data.output_msg);
-        }
-    } else {
-        console.log("gridApi가 초기화되지 않았습니다.");
+      try {
+        const response = await axios.post(`${API_BASE_URL}/schedule`, formattedData);
+        console.log('서버 응답:', response.data.output_msg);
+        alert('서버 응답:' + response.data.output_msg);
+        selectRow();
+        //sideSelectRow();
+      } 
+      catch (error) {
+        console.error('서버에 데이터 전송 중 오류:', error);
+        alert('서버 에러응답:' + response.data.output_msg);
+      }
+    } 
+    else {
+      console.log("gridApi가 초기화되지 않았습니다.");
     }
   };
 
@@ -541,32 +562,38 @@ export default function Home() {
           bg-sky-700 text-white rounded-2xl
           border border-cyan-800 shadow-md hover:bg-sky-900" onClick={addMonth}>{month+1}월</button> 
         </div>
-        <div className="relative left-[390px] w-[1500px] flex justify-end  rounded-md gap-1">
-          <button  className="w-[80px] h-[50px]
-          bg-sky-700 text-white rounded-2xl
-          border border-cyan-800 shadow-md hover:bg-sky-900" onClick={createDuty} >
-                생성
-          </button>
-          <button  className="w-[80px] h-[50px]
-          bg-sky-700 text-white rounded-2xl
-          border border-cyan-800 shadow-md hover:bg-sky-900" onClick={deletAllData} >
-            초기화
-          </button>
-          <button  className="w-[80px] h-[50px]
-          bg-sky-700 text-white rounded-2xl
-          border border-cyan-800 shadow-md hover:bg-sky-900" onClick={sendDataToServer} >
-            저장
-          </button>
-          <button  className="w-[80px] h-[50px]
-          bg-sky-700 text-white rounded-2xl
-          border border-cyan-800 shadow-md hover:bg-sky-900"onClick={() => setOpen(true)} >
-            최적화
-          </button>
-          <button  className="w-[80px] h-[50px]
-          bg-sky-700 text-white rounded-2xl
-          border border-cyan-800 shadow-md hover:bg-sky-900"onClick={onBtnExport} >
-          표 다운
-          </button>
+        <div className="relative left-[390px] w-[1500px] flex justify-between   rounded-md gap-1">
+          <div className="flex w-[200px] h-[50px] items-end gap-1">
+          <div className="w-[70px] h-[30px] shadow-md bg-[rgba(238,255,88,1)] rounded-4xl "></div><h3 className="tetx-xl font-bold">Charge</h3>
+          <div className="w-[70px] h-[30px] shadow-md bg-[#e6e4e4] rounded-4xl "></div><h3  className="tetx-xl font-bold">Acting</h3>
+          </div>
+          <div className="flex gap-1">
+            <button  className="w-[80px] h-[50px]
+            bg-sky-700 text-white rounded-2xl
+            border border-cyan-800 shadow-md hover:bg-sky-900" onClick={createDuty} >
+                  생성
+            </button>
+            <button  className="w-[80px] h-[50px]
+            bg-sky-700 text-white rounded-2xl
+            border border-cyan-800 shadow-md hover:bg-sky-900" onClick={deletAllData} >
+              초기화
+            </button>
+            <button  className="w-[80px] h-[50px]
+            bg-sky-700 text-white rounded-2xl
+            border border-cyan-800 shadow-md hover:bg-sky-900" onClick={sendDataToServer} >
+              저장
+            </button>
+            <button  className="w-[80px] h-[50px]
+            bg-sky-700 text-white rounded-2xl
+            border border-cyan-800 shadow-md hover:bg-sky-900"onClick={() => setOpen(true)} >
+              최적화
+            </button>
+            <button  className="w-[80px] h-[50px]
+            bg-sky-700 text-white rounded-2xl
+            border border-cyan-800 shadow-md hover:bg-sky-900"onClick={onBtnExport} >
+            표 다운
+            </button>
+          </div>
           <OptimizeDialog open={open} onClose={() => setOpen(false)} onRun={handleRun} yyyymm ={yyyymm} sel1 = {selectRow} sel2 = {sideSelectRow}/>
         </div>
         {/* 게시글 목록 */}
