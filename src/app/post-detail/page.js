@@ -61,7 +61,7 @@ export default function Home() {
     return pageLinks;
   };
   return (
-      <>
+      <Suspense fallback={<div>Loading...</div>}>
         <div className="flex flex-wrap items-center justify-between p-4 m-4 bg-blue-400 rounded-2xl">
          
         </div>
@@ -100,6 +100,6 @@ export default function Home() {
             댓글 달기
           </button>
         </div>
-      </>
+      </Suspense>
   );
 }
