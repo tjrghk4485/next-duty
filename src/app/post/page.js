@@ -67,7 +67,7 @@ export default function Home() {
         <div className="space-y-4 p-4 m-4 bg-white rounded-2xl">
           {currentPosts.map((post) => (
               <article key={post.id} className="border-b border-gray-200 py-4 last:border-b-0 cursor-pointer hover:scale-101 transition" 
-              onClick={() => {router.push('/post-detail?query=next.js')}}
+              // onClick={() => {router.push('/post-detail?query=next.js')}}
               >
               <h1 href="/" className="text-xl font-semibold text-gray-900">
                 {post.title}
