@@ -16,8 +16,7 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
   const [currentPosts, setCurrentPosts] = useState([]); // 현재 페이지의 게시글 목록
   const [totalPosts, setTotalPosts] = useState(0); // 총 게시글 수
-  const searchParams = useSearchParams();
-  const searchQuery = searchParams.get('query');
+
 
   // 컴포넌트가 마운트되거나 currentPage가 변경될 때마다 실행
   useEffect(() => {
@@ -61,7 +60,7 @@ export default function Home() {
     return pageLinks;
   };
   return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <>
         <div className="flex flex-wrap items-center justify-between p-4 m-4 bg-blue-400 rounded-2xl">
          
         </div>
@@ -100,6 +99,6 @@ export default function Home() {
             댓글 달기
           </button>
         </div>
-      </Suspense>
+      </>
   );
 }
