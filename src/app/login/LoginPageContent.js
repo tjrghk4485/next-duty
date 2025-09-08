@@ -3,10 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams  } from 'next/navigation';
 import Image from 'next/image';
-import axios from '../../lib/axios';
+import axios from '../lib/axios';
 import Head from 'next/head';
 import Link from "next/link";
-import domainIcon from '../../../assets/domain.svg'
+import domainIcon from '../../assets/domain.svg'
 export default function LoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState('');

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo, useRef, useCallback} from "react";
 import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
 import { AgGridReact } from 'ag-grid-react'; // AG Grid 컴포넌트 임포트
@@ -20,7 +19,7 @@ export default function Home() {
   ModuleRegistry.registerModules([AllCommunityModule]);
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
+  const gridApisRef = useRef([]);
   // 테이블에 표시할 행(row) 데이터
   const [rowData, setRowData] = useState([]);
   const [columnDefs, setColumnDefs] = useState([
@@ -235,6 +234,7 @@ export default function Home() {
   // };
 
   const onGridReady = (params, index) => {
+    gridApisRef.current[index] = params.api;
     // 기존 배열을 복사하고 새로운 API 추가
     setGridApis(prevApis => {
       const newApis = [...prevApis];
@@ -371,30 +371,109 @@ export default function Home() {
     if(selectedCell.column.colId != "name"){
       if(event.event.code =='KeyD'){
         rowNode.setDataValue(selectedCell.column.getColId(), 'D');
-       gridApis[1].tabToNextCell(event);
+        gridApis[1].tabToNextCell(event);
         console.log("selectedCell" + selectedCell);
       }
       else if(event.event.code =='KeyE'){
         rowNode.setDataValue(selectedCell.column.getColId(), 'E');
-       gridApis[1].tabToNextCell(event);
+        gridApis[1].tabToNextCell(event);
       }
       else if(event.event.code =='KeyO'){
         rowNode.setDataValue(selectedCell.column.getColId(), 'O');
-       gridApis[1].tabToNextCell(event);
+        gridApis[1].tabToNextCell(event);
       }
       else if(event.event.code =='KeyN'){
         rowNode.setDataValue(selectedCell.column.getColId(), 'N');
-       gridApis[1].tabToNextCell(event);
+        gridApis[1].tabToNextCell(event);
       }
-  }else{
-   gridApis[1].tabToNextCell(event);
-  }
-
-    
+    }else{
+    gridApis[1].tabToNextCell(event);
+    }
   };
 
+  // const onRowClicked = (event) => {
+  //   const rowIndex = event.node.rowIndex;
+  //   console.log("rowIndex=" + rowIndex );
+    
+  // }
+
+  // onRowClicked 이벤트 핸들러
+  const onRowClicked = useCallback((event) => {
+    const clickedId = event.node.rowIndex;
+    const gridApi1 = gridApisRef.current[1];
+    const gridApi2 = gridApisRef.current[2];
+
+    // 1. 모든 노드의 'isHighlighted' 상태를 false로 초기화
+    const updates = [];
+    gridApi1.forEachNode(node => {
+        node.data.isHighlighted = false;
+        updates.push(node.data);
+      
+    });
+
+    // 2. 클릭된 노드의 'isHighlighted' 상태를 true로 설정
+    const nodeToHighlight1 = gridApi1.getRowNode(clickedId);
+    if (nodeToHighlight1) {
+      nodeToHighlight1.data.isHighlighted = true;
+      updates.push(nodeToHighlight1.data);
+    }
+    
+    // 3. 업데이트된 데이터를 그리드에 적용
+    gridApi1.applyTransaction({ update: updates });
+
+     gridApi1.forEachNode(node => {
+      if (node.data.isHighlighted) {
+        node.data.isHighlighted = false;
+        updates.push(node.data);
+      }
+    });
+
+    const updates2 = [];
+    gridApi2.forEachNode(node => {
+      if (node.data.isHighlighted) {
+        node.data.isHighlighted = false;
+        updates2.push(node.data);
+      }
+    });
+
+    // 2. 클릭된 노드의 'isHighlighted' 상태를 true로 설정
+    const nodeToHighlight2 = gridApi2.getRowNode(clickedId);
+    if (nodeToHighlight2) {
+      nodeToHighlight2.data.isHighlighted = true;
+      updates2.push(nodeToHighlight2.data);
+    }
+    
+    // 3. 업데이트된 데이터를 그리드에 적용
+    gridApi2.applyTransaction({ update: updates2 });
+  }, []);
+
+  // getRowClass 콜백을 사용하여 조건에 따라 클래스 적용
+  // const getRowClass = useCallback((params) => {
+  //   // params.data.isHighlighted가 true이면 'highlight-row' 클래스 반환
+  //   if (params.data.isHighlighted) {
+  //     console.log("name="+params.data.name);
+  //     return 'highlight-row';
+  //   }
+  //       console.log("name2="+params.data.name);
+  //       return '';
+        
+      
+    
+  // }, []);
+
+  const rowClassRules = {
+  'highlight-row': (params) => params.data.isHighlighted === true,
+};
+
+  const onCellClicked = (event) => {
+    const rowIndex = event.node.rowIndex;
+    const clickedColumnId = event.column.getColId();
+    console.log( "clickedColumnId=" + clickedColumnId);
+
+  }
+
   const onBtnExport = useCallback(() => {
-     gridApis[1].exportDataAsCsv();
+    gridApis[1].exportDataAsCsv();
     }, []);
 
   const handleRun = () => {
@@ -419,7 +498,7 @@ export default function Home() {
   const sideSelectRow = () => {
     axios.get(`${API_BASE_URL}/schedule`,{
         params: {
-           workDate: yyyymm-1
+          workDate: yyyymm-1
         }
     })
     .then(response => {
@@ -596,7 +675,6 @@ export default function Home() {
           </div>
           <OptimizeDialog open={open} onClose={() => setOpen(false)} onRun={handleRun} yyyymm ={yyyymm} sel1 = {selectRow} sel2 = {sideSelectRow}/>
         </div>
-        {/* 게시글 목록 */}
         <div className="w-[2100px] flex flex-col space-y-4  m-4   rounded-2xl">
           <div className="flex flex-row space-y-4  gap-4   rounded-2xl">
           <div className="w-[300px]  m-0 rounded-2xl flex-shrink-0 overflow-hidden p-4">
@@ -620,6 +698,9 @@ export default function Home() {
                     onCellValueChanged = {onCellValueChanged}
                     rowHeight={50}
                     onCellKeyDown={onCellKeyDown} // 키 이벤트 처리
+                    onRowClicked={onRowClicked}
+                    rowClassRules={rowClassRules}
+                    onCellClicked={onCellClicked}
                     domLayout="autoHeight"
                 />
           </div>
@@ -629,8 +710,9 @@ export default function Home() {
                     rowData={rightRowData}
                     columnDefs={rightColumnDefs}
                     defaultColDef={defaultColDef}
+                    rowClassRules={rowClassRules}
                     onGridReady = {(params) => onGridReady(params, 2)}
-                    rowHeight={50}
+                    rowHeight={50}                
                     domLayout="autoHeight"
                 />
           </div>

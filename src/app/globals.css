@@ -126,3 +126,20 @@ body {
 .ag-theme-alpine .night-cell {
   background-color: #c5cae9; /* 연한 파란색 */
 }
+
+.highlight-row {
+  z-index: 2; /* 다른 row 위로 올라오게 */
+}
+
+.highlight-row::after {
+  content: "";
+  position: absolute;
+  top: -6px;   /* 위로 살짝 침범 */
+  bottom: -6px; /* 아래로 살짝 침범 */
+  left: 0;
+  right: 0;
+  background: rgba(153, 118, 228, 0.799); /* 반투명 노랑 */
+  border-radius: 6px;
+  pointer-events: none; /* 클릭 막지 않음 */
+  z-index: -1; /* highlight-row 텍스트보다 뒤로 */
+}
