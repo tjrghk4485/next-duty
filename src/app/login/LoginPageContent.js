@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false); 
   const searchParams = useSearchParams();
   const alertShown = useRef(false); // alert가 이미 떴는지 확인하는 변수
-
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   useEffect(() => {
     // 이미 알림이 표시되었으면 함수를 종료
     if (alertShown.current) {
@@ -37,7 +37,7 @@ export default function LoginPage() {
 
     try {
       // 스프링 시큐리티 백엔드 API 주소로 로그인 요청을 보냅니다.
-      const response = await axios.post('http://localhost:8080/auth/login', {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
         username,
         password,
       });
