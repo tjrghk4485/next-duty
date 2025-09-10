@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false); 
   const searchParams = useSearchParams();
   const alertShown = useRef(false); // alert가 이미 떴는지 확인하는 변수
 
@@ -31,6 +32,8 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
+    setError(''); // 이전 에러 메시지 초기화
+    setIsLoading(true); // 요청 시작 시 로딩 상태를 true로 설정합니다.
 
     try {
       // 스프링 시큐리티 백엔드 API 주소로 로그인 요청을 보냅니다.
@@ -38,13 +41,14 @@ export default function LoginPage() {
         username,
         password,
       });
-
+      setIsLoading(false);
       // 백엔드에서 받은 JWT 토큰을 localStorage에 저장합니다.
       //localStorage.setItem('token', response.data.token);
       
       // 로그인 성공 후 메인 페이지로 이동
       router.push('/status');
     } catch (err) {
+      setIsLoading(false);
       // 로그인 실패 시 에러 메시지 표시
       setError('로그인 실패! 아이디와 비밀번호를 확인해주세요.');
     }
@@ -56,7 +60,7 @@ export default function LoginPage() {
         <title>로그인</title>
       </Head>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <Image src={domainIcon} alt="도메인 이미지" width={300} height={200} />;
+        <Image src={domainIcon} alt="도메인 이미지" width={300} height={200} />
         <form onSubmit={handleLogin} className="flex flex-col items-center justify-center p-8 bg-white rounded shadow-md w-96">
           <h1 className="text-2xl font-bold mb-6 text-center">로그인</h1>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -82,7 +86,7 @@ export default function LoginPage() {
             type="submit"
             className="w-[200px] bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
           >
-            로그인
+            {isLoading ? '로그인 중...' : '로그인'}
           </button>
           <Link href="/register" className="block text-black">
             회원가입

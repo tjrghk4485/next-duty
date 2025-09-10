@@ -2,18 +2,18 @@
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
-
+import domainIcon from '../assets/domain.svg'
 export default function Header() {
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
-
+  
   return (
     <header className="bg-sky-900">
       <div className="flex flex-wrap items-center justify-between lg:container px-4 py-2 mx-auto md:flex-no-wrap md:px-6">
         <div className="flex items-center">
           
 
-          <Link href="/" className="text-lg md:text-xl font-bold ml-3 text-white">
-              NEXT.JS-TAILWIND CSS STARTER 
+          <Link href="/status" className="text-lg md:text-xl font-bold ml-3 text-white">
+              <Image src={domainIcon} alt="도메인 이미지" width={120} height={100} />
           </Link>
         </div>
 

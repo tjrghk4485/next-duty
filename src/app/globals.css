@@ -143,3 +143,23 @@ body {
   pointer-events: none; /* 클릭 막지 않음 */
   z-index: -1; /* highlight-row 텍스트보다 뒤로 */
 }
+
+
+
+/* 세로줄 전체 (col) */
+.highlight-col {
+  background-color: rgba(44, 105, 170, 0.3) !important;
+}
+
+.highlight-col::after {
+  content: "";
+  position: absolute;
+  top: -6px;   /* 위로 살짝 침범 */
+  bottom: -6px; /* 아래로 살짝 침범 */
+  left: 0;
+  right: 0;
+  background: rgba(153, 118, 228, 0.799); /* 반투명 노랑 */
+  border-radius: 6px;
+  pointer-events: none; /* 클릭 막지 않음 */
+  z-index: -1; /* highlight-row 텍스트보다 뒤로 */
+}
