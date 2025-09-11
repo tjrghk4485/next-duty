@@ -11,6 +11,7 @@ import OptimizeDialog from '../lib/OptimizeDialog';
 
 
 export default function Home() {
+  const router = useRouter();
   const [gridApis, setGridApis] = useState([]);
   // const allGridApi = useRef([]);
   // const gridApi = useRef([]);
@@ -279,13 +280,14 @@ export default function Home() {
         
     });
       //console.log('서버 응답:', response.data.output_msg);
-      alert('서버 응답:' + response.data.output_msg);
+      alert('생성완료 되었습니다.');
         selectRow();
         sideSelectRow();
     
     } catch (error) {
       console.error('서버에 데이터 전송 중 오류:', error);
       alert('서버 에러응답:' + response.data.output_msg);
+      router.push('/login');
     }
   }
 

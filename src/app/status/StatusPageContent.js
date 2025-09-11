@@ -64,7 +64,7 @@ export default function Home() {
       }));
         setRowData(modifiedData);
       })
-    .catch(error => alert('Error:', error));
+    .catch(error => {router.push('/login');});
   
   
     // setTimeout(() => {
@@ -114,7 +114,7 @@ export default function Home() {
       }));
         setRowData(modifiedData);
       })
-    .catch(error => alert('Error:', error));
+    .catch(error => {router.push('/login');});
   };
 
 
@@ -270,7 +270,7 @@ export default function Home() {
             <button className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" onClick={addRow}>
                 행추가
             </button>
-            <a href={`api/sample/nurseUpload.xlsx`} download>
+            <a href={`/nurseUpload.xlsx`} download>
               <button  className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" >샘플  엑셀 다운로드</button>
             </a>
             <div className="relative inline-block ">
