@@ -37,7 +37,7 @@ export default function LoginPage() {
 
     try {
       // 스프링 시큐리티 백엔드 API 주소로 로그인 요청을 보냅니다.
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+      const response = await axios.post(`api/auth/login`, {
         username,
         password,
       });
