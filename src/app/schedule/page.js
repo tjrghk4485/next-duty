@@ -274,7 +274,7 @@ export default function Home() {
     }
 
     try {
-      const response =  await axios.post(`${API_BASE_URL}/schedule/create`, {
+      const response =  await axios.post(`api/schedule/create`, {
         workDate: yyyymm
         
     });
@@ -297,7 +297,7 @@ export default function Home() {
     }
 
     try {
-      const response =  await axios.post(`${API_BASE_URL}/schedule/delete`, {
+      const response =  await axios.post(`api/schedule/delete`, {
         workDate: yyyymm
       });
       console.log('서버 응답:', response.data.output_msg);
@@ -345,7 +345,7 @@ export default function Home() {
       console.log("수정 후 전체 데이터:",formattedData);
 
       try {
-        const response = await axios.post(`${API_BASE_URL}/schedule`, formattedData);
+        const response = await axios.post(`api/schedule`, formattedData);
         console.log('서버 응답:', response.data.output_msg);
         alert('서버 응답:' + response.data.output_msg);
         selectRow();
@@ -482,7 +482,7 @@ export default function Home() {
 
   //조회
   const selectRow = () => {
-    axios.get(`${API_BASE_URL}/schedule`,{
+    axios.get(`api/schedule`,{
         params: {
           workDate: String(yyyymm)
         }
@@ -495,7 +495,7 @@ export default function Home() {
   };
 
   const sideSelectRow = () => {
-    axios.get(`${API_BASE_URL}/schedule`,{
+    axios.get(`api/schedule`,{
         params: {
           workDate: yyyymm-1
         }

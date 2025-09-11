@@ -8,7 +8,7 @@ export default function Footer() {
   
   try{
     // 1. 쿠키 삭제
- const response =  await axios.post(`${API_BASE_URL}/auth/logout`, {
+ const response =  await axios.post(`api/auth/logout`, {
         credentials: "include"
     });
     alert("로그아웃 되었습니다.");
@@ -24,8 +24,7 @@ export default function Footer() {
     <footer className="bg-cyan-800">
       <ul className="flex items-center justify-between lg:container px-4 py-6 mx-auto text-sm text-white md:px-6">
         <li>
-          Created by{" "}
-          
+          Created by         
         </li>
 
         <li className="font-bold" onClick={handleLogout}>

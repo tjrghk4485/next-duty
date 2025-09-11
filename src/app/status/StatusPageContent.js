@@ -56,7 +56,7 @@ export default function Home() {
   // 컴포넌트가 마운트되거나 currentPage가 변경될 때마다 실행
   useEffect(() => {
     
-    axios.get(`${API_BASE_URL}/nurse`)
+    axios.get(`api/nurse`)
       .then(response => {
         const modifiedData = response.data.map(item => ({
         ...item,
@@ -66,7 +66,7 @@ export default function Home() {
       })
     .catch(error => alert('Error:', error));
   
-   
+  
     // setTimeout(() => {
     //   gridApi.current.sizeColumnsToFit();
     // }, 100);
@@ -78,10 +78,10 @@ export default function Home() {
     }
   }, [rowData])
 
-  
 
-  
- 
+
+
+
 
   // 컬럼의 기본 속성을 설정
   const defaultColDef = useMemo(() => {
@@ -106,7 +106,7 @@ export default function Home() {
   };
 
   const selectRow = () => {
-    axios.get(`${API_BASE_URL}/nurse`)
+    axios.get(`api/nurse`)
       .then(response => {
         const modifiedData = response.data.map(item => ({
         ...item,
@@ -152,7 +152,7 @@ export default function Home() {
         if (nullChk == 1) return;
         console.log("전체 데이터:", allData);
         try {
-            const response = await axios.post(`${API_BASE_URL}/nurse`, allData);
+            const response = await axios.post(`api/nurse`, allData);
             console.log('서버 응답:', response.data.output_msg);
             alert('서버 응답:' + response.data.output_msg);
             selectRow();   
@@ -241,7 +241,7 @@ export default function Home() {
   return (
       <>
         <div className="flex flex-wrap items-center justify-center p-4 m-4   rounded-2xl">
-         <h1 className="text-xl font-semibold text-gray-900">사용자정보</h1> 
+        <h1 className="text-xl font-semibold text-gray-900">사용자정보</h1> 
         </div>
         {/* 게시글 목록 */}
         <div className="flex flex-row items-center justify-center space-y-4  m-4 px-16  rounded-2xl">
@@ -250,7 +250,7 @@ export default function Home() {
           <div  className="rounded-xl flex-grow flex-grow overflow-hidden  p-4">
             <AgGridReact
                     className="ag-theme-alpine"
-                     theme="legacy" 
+                    theme="legacy" 
                     rowData={rowData}
                     columnDefs={columns}
                     defaultColDef={defaultColDef}
@@ -270,7 +270,7 @@ export default function Home() {
             <button className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" onClick={addRow}>
                 행추가
             </button>
-            <a href={`${API_BASE_URL}/sample/nurseUpload.xlsx`} download>
+            <a href={`api/sample/nurseUpload.xlsx`} download>
               <button  className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" >샘플  엑셀 다운로드</button>
             </a>
             <div className="relative inline-block ">

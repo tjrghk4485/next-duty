@@ -10,7 +10,7 @@ export default function OptimizeDialog({ open, onClose, yyyymm, sel1, sel2 }) {
     try {
         
       // 여기에 실제 API 호출
-      const res = await axios.post(`${API_BASE_URL}/schedule/auto`, 
+      const res = await axios.post(`api/schedule/auto`, 
         { option: option,
           workDate: yyyymm 
         });

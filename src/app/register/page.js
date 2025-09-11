@@ -51,7 +51,7 @@ const Register = ({valueChk}) => {
           return false;
         }
         try {
-          const responseData = await axios.get(`${API_BASE_URL}/auth/chk`, {params: {
+          const responseData = await axios.get(`api/auth/chk`, {params: {
             "id": id
         }});
           console.log(responseData.data);
@@ -117,7 +117,7 @@ const Register = ({valueChk}) => {
         };
         console.log("requestData=" + JSON.stringify(requestData));
         try {
-          const responseData = await axios.post(`${API_BASE_URL}/auth/register`, {
+          const responseData = await axios.post(`api/auth/register`, {
             "username": id,
             "password" : password,
             //"user_nm" : user_nm
