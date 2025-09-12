@@ -303,7 +303,7 @@ export default function Home() {
         workDate: yyyymm
       });
       console.log('서버 응답:', response.data.output_msg);
-      alert('서버 응답:' + response.data.output_msg);
+      alert('초기화되었습니다.');
       
       selectRow();
       sideSelectRow();
@@ -349,7 +349,7 @@ export default function Home() {
       try {
         const response = await axios.post(`api/schedule`, formattedData);
         console.log('서버 응답:', response.data.output_msg);
-        alert('서버 응답:' + response.data.output_msg);
+        alert('저장되었습니다.');
         selectRow();
         //sideSelectRow();
       } 

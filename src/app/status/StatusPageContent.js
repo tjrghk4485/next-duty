@@ -156,7 +156,7 @@ export default function Home() {
         try {
             const response = await axios.post(`api/nurse`, allData);
             console.log('서버 응답:', response.data.output_msg);
-            alert('서버 응답:' + response.data.output_msg);
+            alert('저장되었습니다.');
             selectRow();   
             
             } catch (error) {
