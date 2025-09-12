@@ -14,7 +14,7 @@ export default function OptimizeDialog({ open, onClose, yyyymm, sel1, sel2 }) {
         { option: option,
           workDate: yyyymm 
         });
-      alert('최적화 완료! 결과: ' + res.data.message);
+      alert('최적화 완료!');
       console.log("option" + option);
     } catch (err) {
       alert('에러 발생: ' + err.message);
