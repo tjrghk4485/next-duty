@@ -2,7 +2,6 @@
 
 import { useState, useEffect, Suspense} from "react";
 import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 const mockPosts = Array.from({ length: 100 }, (_, i) => ({
   id: i + 1,

@@ -28,7 +28,7 @@ export default function Header() {
             { title: "스케줄표", route: "/schedule" },
           ].map(({ route, title }) => (
             <li className="mt-3 md:mt-0 md:ml-6" key={title}>
-              <Link href={route} className="block text-white">
+              <Link href={route} className="block text-white hover:text-gray-400 hover:font-[]">
                 {title}
               </Link>
             </li>

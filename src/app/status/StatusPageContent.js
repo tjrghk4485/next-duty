@@ -262,7 +262,7 @@ export default function Home() {
                 />
           </div>
           </div>
-          <div className="flex flex-row w-[800px] min-h-screen space-y-4  gap-4   rounded-2xl ">
+          <div className="flex flex-row w-[100px] min-h-screen space-y-4  gap-4   rounded-2xl ">
             <div className="flex flex-col gap-2 w-[100px] min-h-screen py-2">
             <button className="w-[80px] h-[50px] bg-sky-700 text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900" onClick={sendDataToServer}>
                 저장
