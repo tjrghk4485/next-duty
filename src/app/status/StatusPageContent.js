@@ -56,20 +56,22 @@ export default function Home() {
   // 컴포넌트가 마운트되거나 currentPage가 변경될 때마다 실행
   useEffect(() => {
     
-    axios.get(`api/nurse`)
-      .then(response => {
-        const modifiedData = response.data.map(item => ({
-        ...item,
-        delete: false
-      }));
-        setRowData(modifiedData);
-      })
-    .catch(error => {router.push('/login');});
-  
-  
-    // setTimeout(() => {
-    //   gridApi.current.sizeColumnsToFit();
-    // }, 100);
+  axios.get(`api/nurse`)
+    .then(response => {
+      const modifiedData = response.data.map(item => ({
+      ...item,
+      delete: false
+    }));
+      setRowData(modifiedData);
+    })
+  .catch(error => {router.push('/login');});
+
+  if(gridApi.current != null){
+    gridApi.current.sizeColumnsToFit();
+  }
+  // setTimeout(() => {
+  //   gridApi.current.sizeColumnsToFit();
+  // }, 100);
   }, [currentPage]);
 
   useEffect(() => {
@@ -241,11 +243,11 @@ export default function Home() {
   return (
       <>
         <div className="flex flex-wrap items-center justify-center p-4 m-4   rounded-2xl">
-        <h1 className="text-xl font-semibold text-gray-900">사용자정보</h1> 
+        <h1 className="text-xl font-semibold text-gray-900">간호사 정보</h1> 
         </div>
         {/* 게시글 목록 */}
         <div className="flex flex-row items-center justify-center space-y-4  m-4 px-16  rounded-2xl">
-          <div className="flex flex-row w-[800px] min-h-screen space-y-4   gap-4   rounded-2xl ">
+          <div className="flex flex-row w-[1200px] min-h-screen space-y-4   gap-4   rounded-2xl ">
         
           <div  className="rounded-xl flex-grow flex-grow overflow-hidden  p-4">
             <AgGridReact

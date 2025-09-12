@@ -5,14 +5,14 @@ import domainIcon from '../assets/domain.svg'
 export default function Header() {
   
   return (
-    <header className="bg-sky-900">
+    <header className="bg-sky-900 shadow-md">
       <div className="flex flex-wrap items-center justify-between lg:container px-4 py-2 mx-auto md:flex-no-wrap md:px-6">
         <div className="flex items-center">
           
 
-          <Link href="/status" className="text-lg md:text-xl font-bold ml-3 text-white">
+      
               <Image src={domainIcon} alt="도메인 이미지" width={120} height={100} />
-          </Link>
+          
         </div>
 
         

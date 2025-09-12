@@ -124,7 +124,7 @@ const Register = ({valueChk}) => {
         });
           if (responseData.status === 201) {
             alert('회원가입 완료.')
-            router.push('/status');
+            router.push('/login');
           } else {
             alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
           }
