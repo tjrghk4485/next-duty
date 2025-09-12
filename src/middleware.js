@@ -8,9 +8,9 @@ export function middleware(request) {
 
   // "/" 경로를 "/status"로 리다이렉트하는 로직을 미들웨어에 추가합니다.
   if (pathname === '/') {
-      return NextResponse.redirect(new URL('/status', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
   }
-
+  console.log('pathname' + pathname);
   // 쿠키가 없고 보호된 경로에 접근하려는 경우 로그인 페이지로 리디렉션
   const protectedPaths = ['/status', '/post'];
   const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path));
