@@ -3,7 +3,9 @@ import axios from 'axios';
 
 export default function OptimizeDialog({ open, onClose, yyyymm, sel1, sel2 }) {
   const [loading, setLoading] = useState(false);
-  const [option, setOption] = useState(3);
+  const [optionD, setOptionD] = useState(3);
+  const [optionE, setOptionE] = useState(3);
+  const [optionN, setOptionN] = useState(3);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const handleRun = async () => {
     setLoading(true);
@@ -11,11 +13,12 @@ export default function OptimizeDialog({ open, onClose, yyyymm, sel1, sel2 }) {
         
       // 여기에 실제 API 호출
       const res = await axios.post(`api/schedule/auto`, 
-        { option: option,
+        { optionD: optionD,
+          optionE: optionE,
+          optionN: optionN,
           workDate: yyyymm 
         });
       alert('최적화 완료!');
-      console.log("option" + option);
     } catch (err) {
       alert('에러 발생: ' + err.message);
     } finally {
@@ -26,21 +29,53 @@ export default function OptimizeDialog({ open, onClose, yyyymm, sel1, sel2 }) {
     }
   };
 
-  const handleChange = (e) => {
-    setOption(Number(e.target.value));
+  const handleChangeD = (e) => {
+    setOptionD(Number(e.target.value));
+  };
+
+  const handleChangeE = (e) => {
+    setOptionE(Number(e.target.value));
+  };
+
+  const handleChangeN = (e) => {
+    setOptionN(Number(e.target.value));
   };
 
   if (!open) return null;
 
   return (
     <div style={overlayStyle}>
-      <div style={modalStyle}>
+      <div className='flex flex-col gap-2' style={modalStyle}>
         <h2 className='font-bold text-lg'>파트당 근무자 수 를 입력하세요.</h2>
-        <input
-        type="number"
-        value={option}
-        onChange={handleChange}
-      />
+        <br/>
+        <div className='flex gap-2'>
+          <p className='text-green-500 text-lg'>D</p>
+          <input
+          className='border border-gray-300 rounded-3xl text-center'
+          type="number"
+          value={optionD}
+          onChange={handleChangeD}
+          />
+        </div>
+        <div className='flex gap-2'>
+          <p className='text-blue-500 text-lg'>E</p>
+          <input
+          className='border border-gray-300 rounded-3xl text-center'
+          type="number"
+          value={optionE}
+          onChange={handleChangeE}
+          />
+        </div>
+        <div className='flex gap-2'>
+          <p className='text-pink-500 text-lg'>D</p>
+          <input
+          className='border border-gray-300 rounded-3xl text-center'
+          type="number"
+          value={optionN}
+          onChange={handleChangeN}
+          />
+        </div>
+        <br/>
         {/* 로딩 중이면 스피너, 아니면 실행 버튼 */}
         {loading ? (
           <div style={{ textAlign: 'center', padding: '1rem' }}>
