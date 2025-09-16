@@ -24,7 +24,7 @@ export default function Footer() {
     <footer className="bg-cyan-800">
       <ul className="flex items-center justify-between lg:container px-4 py-6 mx-auto text-sm text-white md:px-6">
         <li>
-          Created by 석화       
+          피드백 tjrghk4485@naver.com      
         </li>
         <button className="w-[80px] h-[50px]  text-white rounded-2xl border border-cyan-800 shadow-md hover:bg-sky-900"  onClick={handleLogout}>
           로그아웃
