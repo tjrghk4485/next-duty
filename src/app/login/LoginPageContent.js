@@ -88,10 +88,14 @@ export default function LoginPage() {
           >
             {isLoading ? '로그인 중...' : '로그인'}
           </button>
-          <Link href="/register" className="block text-black">
+          <Link href="/register" className="block text-black p-2">
             회원가입
           </Link>        
         </form>
+        <br/>
+        <a className='text-lg hover:text-xl transition' href={`/듀티로봇 메뉴얼.pdf`} target="_blank">
+        메뉴얼 열기
+        </a>
       </div>
     </>
   );

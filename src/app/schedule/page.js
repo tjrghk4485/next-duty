@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback} from "react";
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
+import { AllCommunityModule, ModuleRegistry, CsvExportModule} from 'ag-grid-community'; 
 import { AgGridReact } from 'ag-grid-react'; // AG Grid 컴포넌트 임포트
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import axios from "../lib/axios";
@@ -17,7 +17,7 @@ export default function Home() {
   // const gridApi = useRef([]);
   const columnApi = useRef([]);
   const [open, setOpen] = useState(false);  
-  ModuleRegistry.registerModules([AllCommunityModule]);
+  ModuleRegistry.registerModules([AllCommunityModule, CsvExportModule]);
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const gridApisRef = useRef([]);
