@@ -93,8 +93,8 @@ export default function LoginPage() {
           </Link>        
         </form>
         <br/>
-        <a className='text-lg hover:text-xl transition' href={`/듀티로봇 메뉴얼.pdf`} target="_blank">
-        메뉴얼 열기
+        <a className='text-lg hover:text-xl transition' href={`/듀티로봇 매뉴얼.pdf`} target="_blank">
+        매뉴얼 열기
         </a>
       </div>
     </>
